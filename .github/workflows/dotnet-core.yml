@@ -44,6 +44,7 @@ jobs:
           Dialog/**/*
           Graphics/**/*
           Loenn/**/*
+          Effects/**/*
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2.0.8
