@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Celeste.Mod.MissingMadeline.ModCompat;
 using Microsoft.Xna.Framework.Graphics;
 using Monocle;
 
@@ -9,6 +10,10 @@ namespace Celeste.Mod.MissingMadeline;
 public class MissingMadelineModule : EverestModule
 {
 	private static Effect missingEffect;
+
+	private static EverestModuleMetadata collabUtilsDependency = new EverestModuleMetadata { Name = "CollabUtils2", Version = new Version(1, 10, 14) };
+	private static EverestModuleMetadata maddieHelpingHandDependency = new EverestModuleMetadata { Name = "MaxHelpingHand", Version = new Version(1, 37, 2) };
+
 	public static MissingMadelineModule Instance { get; private set; }
 
 	public override Type SettingsType => typeof(MissingMadelineModuleSettings);
@@ -27,8 +32,8 @@ public class MissingMadelineModule : EverestModule
 		// debug builds use verbose logging
 		Logger.SetLogLevel(nameof(MissingMadelineModule), LogLevel.Verbose);
 #else
-        // release builds use info logging to reduce spam in log files
-        Logger.SetLogLevel(nameof(MissingMadelineModule), LogLevel.Info);
+		// release builds use info logging to reduce spam in log files
+		Logger.SetLogLevel(nameof(MissingMadelineModule), LogLevel.Info);
 #endif
 	}
 
@@ -147,7 +152,7 @@ public class MissingMadelineModule : EverestModule
 
 	private static void RefillRenderHook(On.Celeste.Refill.orig_Render orig, Refill self)
 	{
-		if (Settings.Collectibles.ToggleRefills && self != null && self.Scene != null)
+		if (Settings.Interactive.ToggleRefills && self != null && self.Scene != null)
 		{
 			missingEffect.Parameters["size"].SetValue(Settings.Other.TextureSize);
 
@@ -265,51 +270,81 @@ public class MissingMadelineModule : EverestModule
 		}
 	}
 
-	private static HashSet<Type> allowedTypes
+	private static HashSet<Type> AllowedTypes
 	{
 		get
 		{
-			return new HashSet<Type>
+			var types = new HashSet<Type>
+		{
+			(Settings.Collectibles.ToggleStrawberries) ? typeof(Strawberry) : typeof(Maddy3D),
+			(Settings.Collectibles.ToggleStrawberries) ? typeof(StrawberrySeed) : typeof(Maddy3D),
+			(Settings.Collectibles.ToggleHearts) ? typeof(HeartGem) : typeof(Maddy3D),
+			(Settings.Collectibles.ToggleHearts) ? typeof(FakeHeart) : typeof(Maddy3D),
+			(Settings.Collectibles.ToggleHearts) ? typeof(DreamHeartGem) : typeof(Maddy3D),
+			(Settings.Collectibles.ToggleHearts) ? typeof(SummitGem) : typeof(Maddy3D),
+			(Settings.Blocks.ToggleDreamBlocks) ? typeof(DreamBlock) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleSpikes) ? typeof(Spikes) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleSpikes) ? typeof(TriggerSpikes) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleSpinners) ? typeof(RotateSpinner) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleSpinners) ? typeof(TrackSpinner) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleSpinners) ? typeof(DustRotateSpinner) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleSpinners) ? typeof(DustTrackSpinner) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleSpinners) ? typeof(BladeRotateSpinner) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleSpinners) ? typeof(BladeTrackSpinner) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleSpinners) ? typeof(StarRotateSpinner) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleSpinners) ? typeof(StarTrackSpinner) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleSpinners) ? typeof(CrystalStaticSpinner) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleSpinners) ? typeof(DustStaticSpinner) : typeof(Maddy3D),
+			(Settings.Blocks.ToggleKevins) ? typeof(CrushBlock) : typeof(Maddy3D),
+			(Settings.Interactive.ToggleFeathers) ? typeof(FlyFeather) : typeof(Maddy3D),
+			(Settings.Player.ToggleBadeline) ? typeof(BadelineBoost) : typeof(Maddy3D),
+			(Settings.Player.ToggleBadeline) ? typeof(BadelineDummy) : typeof(Maddy3D),
+			(Settings.Player.ToggleBadeline) ? typeof(FinalBoss) : typeof(Maddy3D),
+			(Settings.Player.ToggleBadeline) ? typeof(FinalBossBeam) : typeof(Maddy3D),
+			(Settings.Player.ToggleBadeline) ? typeof(FinalBossShot) : typeof(Maddy3D),
+			(Settings.Collectibles.ToggleKeys) ? typeof(Key) : typeof(Maddy3D),
+			(Settings.Interactive.ToggleSwitches) ? typeof(Switch) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleLava) ? typeof(RisingLava) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleLava) ? typeof(SandwichLava) : typeof(Maddy3D),
+			(Settings.Misc.ToggleIntroCar) ? typeof(IntroCar) : typeof(Maddy3D),
+			(Settings.Interactive.TogglePufferfish) ? typeof(Puffer) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleFireballs) ? typeof(FireBall) : typeof(Maddy3D),
+			(Settings.Hazards.ToggleSnowballs) ? typeof(Snowball) : typeof(Maddy3D),
+			(Settings.Blocks.ToggleCassetteBlocks) ? typeof(CassetteBlock) : typeof(Maddy3D),
+			(Settings.Collectibles.ToggleCassettes) ? typeof(Cassette) : typeof(Maddy3D),
+			(Settings.Misc.ToggleBirds) ? typeof(BirdNPC) : typeof(Maddy3D),
+			(Settings.Misc.ToggleBirds) ? typeof(FlingBird) : typeof(Maddy3D),
+			(Settings.Misc.ToggleBirds) ? typeof(FlutterBird) : typeof(Maddy3D),
+			(Settings.Misc.ToggleBirds) ? typeof(FlingBirdIntro) : typeof(Maddy3D),
+			(Settings.Misc.ToggleBirds) ? typeof(BirdPath) : typeof(Maddy3D),
+			(Settings.Interactive.ToggleJellyfish) ? typeof(Glider) : typeof(Maddy3D),
+			(Settings.Player.ToggleTheo) ? typeof(TheoCrystal) : typeof(Maddy3D)
+		};
+
+			if (Everest.Loader.DependencyLoaded(collabUtilsDependency))
 			{
-				(Settings.Collectibles.ToggleStrawberries) ? typeof(Strawberry) : typeof(Maddy3D),
-				(Settings.Collectibles.ToggleHearts) ? typeof(HeartGem) : typeof(Maddy3D),
-				(Settings.Collectibles.ToggleHearts) ? typeof(FakeHeart) : typeof(Maddy3D),
-				(Settings.Collectibles.ToggleHearts) ? typeof(DreamHeartGem) : typeof(Maddy3D),
-				(Settings.Blocks.ToggleDreamBlocks) ? typeof(DreamBlock) : typeof(Maddy3D),
-				(Settings.Hazards.ToggleSpinners) ? typeof(RotateSpinner) : typeof(Maddy3D),
-				(Settings.Hazards.ToggleSpinners) ? typeof(TrackSpinner) : typeof(Maddy3D),
-				(Settings.Hazards.ToggleSpinners) ? typeof(DustRotateSpinner) : typeof(Maddy3D),
-				(Settings.Hazards.ToggleSpinners) ? typeof(DustTrackSpinner) : typeof(Maddy3D),
-				(Settings.Hazards.ToggleSpinners) ? typeof(BladeRotateSpinner) : typeof(Maddy3D),
-				(Settings.Hazards.ToggleSpinners) ? typeof(BladeTrackSpinner) : typeof(Maddy3D),
-				(Settings.Hazards.ToggleSpinners) ? typeof(StarRotateSpinner) : typeof(Maddy3D),
-				(Settings.Hazards.ToggleSpinners) ? typeof(StarTrackSpinner) : typeof(Maddy3D),
-				(Settings.Hazards.ToggleSpinners) ? typeof(CrystalStaticSpinner) : typeof(Maddy3D),
-				(Settings.Hazards.ToggleSpinners) ? typeof(DustStaticSpinner) : typeof(Maddy3D),
-				(Settings.Blocks.ToggleKevins) ? typeof(CrushBlock) : typeof(Maddy3D),
-				(Settings.Collectibles.ToggleFeathers) ? typeof(FlyFeather) : typeof(Maddy3D),
-				(Settings.Player.ToggleBadeline) ? typeof(BadelineBoost) : typeof(Maddy3D),
-				(Settings.Player.ToggleBadeline) ? typeof(FinalBoss) : typeof(Maddy3D),
-				(Settings.Player.ToggleBadeline) ? typeof(FinalBossBeam) : typeof(Maddy3D),
-				(Settings.Player.ToggleBadeline) ? typeof(FinalBossShot) : typeof(Maddy3D),
-				(Settings.Collectibles.ToggleKeys) ? typeof(Key) : typeof(Maddy3D),
-				(Settings.Interactive.ToggleSwitches) ? typeof(Switch) : typeof(Maddy3D),
-				(Settings.Hazards.ToggleLava) ? typeof(RisingLava) : typeof(Maddy3D),
-				(Settings.Hazards.ToggleLava) ? typeof(SandwichLava) : typeof(Maddy3D),
-				(Settings.Misc.ToggleIntroCar) ? typeof(IntroCar) : typeof(Maddy3D),
-				(Settings.Interactive.TogglePufferfish) ? typeof(Puffer) : typeof(Maddy3D),
-				(Settings.Hazards.ToggleFireballs) ? typeof(FireBall) : typeof(Maddy3D),
-				(Settings.Hazards.ToggleSnowballs) ? typeof(Snowball) : typeof(Maddy3D),
-				(Settings.Blocks.ToggleCassetteBlocks) ? typeof(CassetteBlock) : typeof(Maddy3D),
-				(Settings.Collectibles.ToggleCassettes) ? typeof(Cassette) : typeof(Maddy3D),
-				(Settings.Misc.ToggleBirds) ? typeof(BirdNPC) : typeof(Maddy3D),
-				(Settings.Misc.ToggleBirds) ? typeof(FlingBird) : typeof(Maddy3D),
-				(Settings.Misc.ToggleBirds) ? typeof(FlutterBird) : typeof(Maddy3D),
-				(Settings.Misc.ToggleBirds) ? typeof(FlingBirdIntro) : typeof(Maddy3D),
-				(Settings.Misc.ToggleBirds) ? typeof(BirdPath) : typeof(Maddy3D),
-				(Settings.Interactive.ToggleJellyfish) ? typeof(Glider) : typeof(Maddy3D),
-				(Settings.Player.ToggleTheo) ? typeof(TheoCrystal) : typeof(Maddy3D)
-			};
+				var collabUtilsEntities = CollabUtils2Compat.LoadEntities();
+				if (collabUtilsEntities != null)
+				{
+					foreach (var entityType in collabUtilsEntities)
+					{
+						types.Add(entityType);
+					}
+				}
+			}
+			if (Everest.Loader.DependencyLoaded(maddieHelpingHandDependency))
+			{
+				var collabUtilsEntities = MaddieHelpingHandCompat.LoadEntities();
+				if (collabUtilsEntities != null)
+				{
+					foreach (var entityType in collabUtilsEntities)
+					{
+						types.Add(entityType);
+					}
+				}
+			}
+
+			return types;
 		}
 	}
 
@@ -325,7 +360,7 @@ public class MissingMadelineModule : EverestModule
 		if (!Settings.Misc.ToggleAllEntities)
 		{
 			trackedEntities = self.Entities.entities
-				.Where(e => allowedTypes.Contains(e.GetType()))
+				.Where(e => AllowedTypes.Contains(e.GetType()))
 				.ToList();
 		}
 		else
@@ -349,7 +384,7 @@ public class MissingMadelineModule : EverestModule
 		}
 
 
-		if (self != null && self.Scene != null && trackedEntities.Contains(self))
+		if (self.Scene != null && trackedEntities.Contains(self))
 		{
 			missingEffect.Parameters["size"].SetValue(Settings.Other.TextureSize);
 

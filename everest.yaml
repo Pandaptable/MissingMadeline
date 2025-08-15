@@ -4,3 +4,8 @@
   Dependencies:
     - Name: EverestCore
       Version: 1.5577.0
+  OptionalDependencies:
+    - Name: CollabUtils2
+      Version: 1.10.14
+    - Name: MaxHelpingHand
+      Version: 1.37.2

@@ -1,5 +1,6 @@
 namespace Celeste.Mod.MissingMadeline;
 
-public class MissingMadelineModuleSaveData : EverestModuleSaveData {
+public class MissingMadelineModuleSaveData : EverestModuleSaveData
+{
 
 }

@@ -74,12 +74,6 @@ public class MissingMadelineModuleSettings : EverestModuleSettings
 	[SettingSubMenu]
 	public class CollectibleSettings
 	{
-		[SettingName("Toggle Golden Feathers")]
-		public bool ToggleFeathers { get; set; } = false;
-
-		[SettingName("Toggle Refill Gems")]
-		public bool ToggleRefills { get; set; } = false;
-
 		[SettingName("Toggle Strawberries")]
 		public bool ToggleStrawberries { get; set; } = false;
 
@@ -109,6 +103,12 @@ public class MissingMadelineModuleSettings : EverestModuleSettings
 
 		[SettingName("Toggle Switches")]
 		public bool ToggleSwitches { get; set; } = false;
+
+		[SettingName("Toggle Refill Gems")]
+		public bool ToggleRefills { get; set; } = false;
+
+		[SettingName("Toggle Golden Feathers")]
+		public bool ToggleFeathers { get; set; } = false;
 	}
 
 
@@ -117,10 +117,10 @@ public class MissingMadelineModuleSettings : EverestModuleSettings
 	{
 		[SettingName("Toggle Wires")]
 		public bool ToggleWires { get; set; } = false;
-		
+
 		[SettingName("Toggle Birds")]
 		public bool ToggleBirds { get; set; } = false;
-		
+
 		[SettingName("Toggle Intro Car")]
 		public bool ToggleIntroCar { get; set; } = false;
 
