@@ -4,7 +4,6 @@ uniform float Time; // level.TimeActive
 uniform float2 CamPos; // level.Camera.Position
 uniform float2 Dimensions; // new Vector2(320, 180)
 uniform int size;
-uniform float alpha;
 
 uniform float4x4 TransformMatrix;
 uniform float4x4 ViewMatrix;
@@ -17,7 +16,7 @@ float4 SpritePixelShader(float4 position : SV_Position, float4 texColor: COLOR0,
 {
 	float4 text = tex2D(TextureSampler, texCoord)*texColor;
 
-	if (text.a < alpha)
+	if (text.a < 0.9)
 		return float4(0, 0, 0, 0);
 
 	// if (text.r >= 0.75 && (text.g + text.b) <= 0.25)
