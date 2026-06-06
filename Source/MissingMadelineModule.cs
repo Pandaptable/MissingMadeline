@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Celeste.Mod.CelesteNet.Client.Entities;
 using Celeste.Mod.MissingMadeline.ModCompat;
 using Microsoft.Xna.Framework.Graphics;
 using Monocle;
@@ -13,6 +14,7 @@ public class MissingMadelineModule : EverestModule
 
 	private static EverestModuleMetadata collabUtilsDependency = new EverestModuleMetadata { Name = "CollabUtils2", Version = new Version(1, 10, 14) };
 	private static EverestModuleMetadata maddieHelpingHandDependency = new EverestModuleMetadata { Name = "MaxHelpingHand", Version = new Version(1, 37, 2) };
+	private static EverestModuleMetadata celesteNetDependency = new EverestModuleMetadata { Name = "CelesteNet.Client", Version = new Version(2, 4, 2) };
 
 	public static MissingMadelineModule Instance { get; private set; }
 
@@ -80,7 +82,13 @@ public class MissingMadelineModule : EverestModule
 
 	private static void PlayerHairRenderHook(On.Celeste.PlayerHair.orig_Render orig, PlayerHair self)
 	{
-		if (Settings.Player.ToggleHair && self != null && self.Scene != null)
+		if (self == null || self.Scene == null || self.Entity is Ghost)
+		{
+			orig(self);
+			return;
+		}
+
+		if (Settings.Player.ToggleHair)
 		{
 			missingEffect.Parameters["size"].SetValue(Settings.Other.TextureSize);
 
@@ -104,7 +112,13 @@ public class MissingMadelineModule : EverestModule
 
 	private static void PlayerSpriteRenderHook(On.Celeste.PlayerSprite.orig_Render orig, PlayerSprite self)
 	{
-		if (Settings.Player.ToggleSkin && self != null && self.Scene != null)
+		if (self == null || self.Scene == null || self.Entity is Ghost)
+		{
+			orig(self);
+			return;
+		}
+
+		if (Settings.Player.ToggleSkin)
 		{
 			missingEffect.Parameters["size"].SetValue(Settings.Other.TextureSize);
 
@@ -349,6 +363,7 @@ public class MissingMadelineModule : EverestModule
 	}
 
 	private static List<Entity> trackedEntities = new List<Entity>();
+	private static bool processingGhost;
 
 	private static void LevelRenderHook(On.Celeste.Level.orig_Render orig, Level self)
 	{
@@ -383,6 +398,60 @@ public class MissingMadelineModule : EverestModule
 			}
 		}
 
+		if (self is Ghost ghost && !processingGhost && self.Scene != null)
+		{
+			var state = MissingMadelineNetComponent.Instance?.GetState(ghost);
+
+			if (state != null && state.HasAnyEnabled)
+			{
+				bool showHair = state.ToggleHair;
+				bool showSkin = state.ToggleSkin;
+
+				bool hairVis = ghost.Hair?.Visible ?? false;
+				bool spriteVis = ghost.Sprite?.Visible ?? false;
+				List<Component> hiddenOthers = new();
+
+				foreach (Component c in ghost.Components)
+				{
+					if (c != ghost.Hair && c != ghost.Sprite && c.Visible)
+					{
+						c.Visible = false;
+						hiddenOthers.Add(c);
+					}
+				}
+
+				processingGhost = true;
+
+				if (ghost.Hair != null) ghost.Hair.Visible = hairVis && showHair;
+				if (ghost.Sprite != null) ghost.Sprite.Visible = spriteVis && showSkin;
+
+				missingEffect.Parameters["size"].SetValue(state.TextureSize);
+				Draw.SpriteBatch.End();
+				Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
+					DepthStencilState.None, RasterizerState.CullNone, missingEffect,
+					(self.SceneAs<Level>()).GameplayRenderer.Camera.Matrix);
+				orig(self);
+				Draw.SpriteBatch.End();
+				Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
+					DepthStencilState.None, RasterizerState.CullNone, null,
+					(self.SceneAs<Level>()).GameplayRenderer.Camera.Matrix);
+
+				foreach (Component c in hiddenOthers)
+					c.Visible = true;
+
+				if (ghost.Hair != null) ghost.Hair.Visible = hairVis && !showHair;
+				if (ghost.Sprite != null) ghost.Sprite.Visible = spriteVis && !showSkin;
+
+				if (hiddenOthers.Count > 0 || (hairVis && !showHair) || (spriteVis && !showSkin))
+					orig(self);
+
+				if (ghost.Hair != null) ghost.Hair.Visible = hairVis;
+				if (ghost.Sprite != null) ghost.Sprite.Visible = spriteVis;
+
+				processingGhost = false;
+				return;
+			}
+		}
 
 		if (self.Scene != null && trackedEntities.Contains(self))
 		{

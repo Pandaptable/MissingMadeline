@@ -32,6 +32,12 @@
         <Reference Include="MaxHelpingHand">
             <HintPath>../deps/MaxHelpingHand.dll</HintPath>
         </Reference>
+        <Reference Include="CelesteNet.Client">
+            <HintPath>../deps/CelesteNet.Client.dll</HintPath>
+        </Reference>
+        <Reference Include="CelesteNet.Shared">
+            <HintPath>../deps/CelesteNet.Shared.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <Target Name="CopyFiles" AfterTargets="Build" Inputs="$(OutputPath)\$(AssemblyName).dll;$(OutputPath)\$(AssemblyName).pdb" Outputs="..\bin\$(AssemblyName).dll;..\bin\$(AssemblyName).pdb">

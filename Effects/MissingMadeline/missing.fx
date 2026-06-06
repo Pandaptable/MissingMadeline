@@ -14,23 +14,21 @@ float4 black = float4(0,0,0, 1);
 
 float4 SpritePixelShader(float4 position : SV_Position, float4 texColor: COLOR0, float2 texCoord : TEXCOORD0) : COLOR0
 {
-	float4 text = tex2D(TextureSampler, texCoord)*texColor;
+	float a = texColor.a;
+	if (a <= 0.0) discard;
 
-	if (text.a < 0.9)
-		return float4(0, 0, 0, 0);
+	float2 uv = texCoord;
+	float4 text = tex2D(TextureSampler, uv);
+	if (text.a <= 0.0) discard;
 
-	// if (text.r >= 0.75 && (text.g + text.b) <= 0.25)
-	// {
+	int fx = (int)floor(position.x / size);
+	int fy = (int)floor(position.y / size);
 
-		int fx = (int)floor(position.x / size);
-		int fy = (int)floor(position.y / size);
+	bool even = ((fx + fy) % 2) == 0;
 
-		bool even = ((fx + fy) % 2) == 0;
+	float3 checker = even ? magenta.rgb : black.rgb;
 
-		texColor = even ? magenta : black;
-	// }
-
-	return texColor;
+	return float4(checker * a, a);
 }
 
 
