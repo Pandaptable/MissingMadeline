@@ -4,6 +4,7 @@ uniform float Time; // level.TimeActive
 uniform float2 CamPos; // level.Camera.Position
 uniform float2 Dimensions; // new Vector2(320, 180)
 uniform int size;
+uniform int UseTexturedChecker;
 
 uniform float4x4 TransformMatrix;
 uniform float4x4 ViewMatrix;
@@ -28,11 +29,17 @@ float4 SpritePixelShader(float4 position : SV_Position, float4 texColor: COLOR0,
 
 	float3 checker = even ? magenta.rgb : black.rgb;
 
-	return float4(checker * a, a);
+	float3 mode0Color = checker * a;
+	float mode0Alpha = a;
+
+	float mode1Alpha = text.a * a;
+	float3 mode1Color = text.rgb * texColor.rgb * checker * mode1Alpha;
+
+	float3 finalColor = lerp(mode0Color, mode1Color, (float)UseTexturedChecker);
+	float finalAlpha = lerp(mode0Alpha, mode1Alpha, (float)UseTexturedChecker);
+
+	return float4(finalColor, finalAlpha);
 }
-
-
-
 
 technique Shader
 {

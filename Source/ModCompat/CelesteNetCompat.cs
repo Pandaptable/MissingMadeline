@@ -19,6 +19,7 @@ public class DataMissingMadelineState : DataType<DataMissingMadelineState>
 	public bool ToggleHair;
 	public bool ToggleSkin;
 	public int TextureSize;
+	public bool UseTexturedChecker;
 
 	public bool HasAnyEnabled => ToggleHair || ToggleSkin;
 
@@ -50,6 +51,7 @@ public class DataMissingMadelineState : DataType<DataMissingMadelineState>
 		ToggleHair = reader.ReadBoolean();
 		ToggleSkin = reader.ReadBoolean();
 		TextureSize = reader.ReadByte();
+		UseTexturedChecker = reader.ReadBoolean();
 	}
 
 	protected override void Write(CelesteNetBinaryWriter writer)
@@ -57,6 +59,7 @@ public class DataMissingMadelineState : DataType<DataMissingMadelineState>
 		writer.Write(ToggleHair);
 		writer.Write(ToggleSkin);
 		writer.Write((byte)TextureSize);
+		writer.Write(UseTexturedChecker);
 	}
 }
 
@@ -112,6 +115,7 @@ public class MissingMadelineNetComponent : CelesteNetGameComponent
 			ToggleHair = settings.Player.ToggleHair,
 			ToggleSkin = settings.Player.ToggleSkin,
 			TextureSize = settings.Other.TextureSize,
+			UseTexturedChecker = settings.Other.UseTexturedChecker,
 		};
 
 		client.Send(data);

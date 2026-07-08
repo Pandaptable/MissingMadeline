@@ -91,6 +91,7 @@ public class MissingMadelineModule : EverestModule
 		if (Settings.Player.ToggleHair)
 		{
 			missingEffect.Parameters["size"].SetValue(Settings.Other.TextureSize);
+			missingEffect.Parameters["UseTexturedChecker"].SetValue(Settings.Other.UseTexturedChecker);
 
 			Draw.SpriteBatch.End();
 			Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
@@ -121,6 +122,7 @@ public class MissingMadelineModule : EverestModule
 		if (Settings.Player.ToggleSkin)
 		{
 			missingEffect.Parameters["size"].SetValue(Settings.Other.TextureSize);
+			missingEffect.Parameters["UseTexturedChecker"].SetValue(Settings.Other.UseTexturedChecker);
 
 			Draw.SpriteBatch.End();
 			Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
@@ -145,6 +147,7 @@ public class MissingMadelineModule : EverestModule
 		if (Settings.Hazards.ToggleSpikes && self != null && self.Scene != null)
 		{
 			missingEffect.Parameters["size"].SetValue(Settings.Other.TextureSize);
+			missingEffect.Parameters["UseTexturedChecker"].SetValue(Settings.Other.UseTexturedChecker);
 
 			Draw.SpriteBatch.End();
 			Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
@@ -169,6 +172,7 @@ public class MissingMadelineModule : EverestModule
 		if (Settings.Interactive.ToggleRefills && self != null && self.Scene != null)
 		{
 			missingEffect.Parameters["size"].SetValue(Settings.Other.TextureSize);
+			missingEffect.Parameters["UseTexturedChecker"].SetValue(Settings.Other.UseTexturedChecker);
 
 			Draw.SpriteBatch.End();
 			Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
@@ -193,6 +197,7 @@ public class MissingMadelineModule : EverestModule
 		if (Settings.Interactive.ToggleSwitches && self != null && self.Scene != null)
 		{
 			missingEffect.Parameters["size"].SetValue(Settings.Other.TextureSize);
+			missingEffect.Parameters["UseTexturedChecker"].SetValue(Settings.Other.UseTexturedChecker);
 
 			Draw.SpriteBatch.End();
 			Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
@@ -217,6 +222,7 @@ public class MissingMadelineModule : EverestModule
 		if (Settings.Interactive.ToggleSprings && self != null && self.Scene != null)
 		{
 			missingEffect.Parameters["size"].SetValue(Settings.Other.TextureSize);
+			missingEffect.Parameters["UseTexturedChecker"].SetValue(Settings.Other.UseTexturedChecker);
 
 			Draw.SpriteBatch.End();
 			Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
@@ -241,6 +247,7 @@ public class MissingMadelineModule : EverestModule
 		if (Settings.Blocks.ToggleDreamBlocks && self != null && self.Scene != null)
 		{
 			missingEffect.Parameters["size"].SetValue(Settings.Other.TextureSize);
+			missingEffect.Parameters["UseTexturedChecker"].SetValue(Settings.Other.UseTexturedChecker);
 
 			Draw.SpriteBatch.End();
 			Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
@@ -265,6 +272,7 @@ public class MissingMadelineModule : EverestModule
 		if (Settings.Misc.ToggleWires && self != null && self.Scene != null)
 		{
 			missingEffect.Parameters["size"].SetValue(Settings.Other.TextureSize);
+			missingEffect.Parameters["UseTexturedChecker"].SetValue(Settings.Other.UseTexturedChecker);
 
 			Draw.SpriteBatch.End();
 			Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
@@ -426,6 +434,7 @@ public class MissingMadelineModule : EverestModule
 				if (ghost.Sprite != null) ghost.Sprite.Visible = spriteVis && showSkin;
 
 				missingEffect.Parameters["size"].SetValue(state.TextureSize);
+				missingEffect.Parameters["UseTexturedChecker"].SetValue(state.UseTexturedChecker);
 				Draw.SpriteBatch.End();
 				Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
 					DepthStencilState.None, RasterizerState.CullNone, missingEffect,
@@ -456,6 +465,7 @@ public class MissingMadelineModule : EverestModule
 		if (self.Scene != null && trackedEntities.Contains(self))
 		{
 			missingEffect.Parameters["size"].SetValue(Settings.Other.TextureSize);
+			missingEffect.Parameters["UseTexturedChecker"].SetValue(Settings.Other.UseTexturedChecker);
 
 			Draw.SpriteBatch.End();
 			Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,

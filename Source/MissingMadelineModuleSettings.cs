@@ -135,5 +135,7 @@ public class MissingMadelineModuleSettings : EverestModuleSettings
 	{
 		[SettingRange(min: 1, max: 50)]
 		public int TextureSize { get; set; } = 3;
+
+		public bool UseTexturedChecker { get; set; } = true;
 	}
 }
