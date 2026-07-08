@@ -33,7 +33,8 @@ float4 SpritePixelShader(float4 position : SV_Position, float4 texColor: COLOR0,
 	float mode0Alpha = a;
 
 	float mode1Alpha = text.a * a;
-	float3 mode1Color = text.rgb * texColor.rgb * checker * mode1Alpha;
+	float textLum = dot(text.rgb, float3(0.299, 0.587, 0.114));
+	float3 mode1Color = textLum * checker * mode1Alpha;
 
 	float3 finalColor = lerp(mode0Color, mode1Color, (float)UseTexturedChecker);
 	float finalAlpha = lerp(mode0Alpha, mode1Alpha, (float)UseTexturedChecker);
